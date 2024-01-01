@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BsArrowLeft } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
-import video from "../assets/video.mp4";
+
 export default function Player() {
   const navigate = useNavigate();
   const { videoUrl } = useParams();
@@ -19,7 +19,7 @@ export default function Player() {
           width="100%"
           height="100%"
           src={`https://www.youtube.com/embed/${videoUrl}`}
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
         />

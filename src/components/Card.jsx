@@ -7,11 +7,8 @@ import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
 import { BsCheck } from "react-icons/bs";
 import axios from "axios";
-import { onAuthStateChanged } from "firebase/auth";
-import { firebaseAuth } from "../utils/firebase-config";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVideoKey, removeMovieFromLiked } from "../store";
-import video from "../assets/video.mp4";
 
 export default React.memo(function Card({ index, movieData, isLiked = false }) {
   const navigate = useNavigate();
@@ -32,7 +29,7 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
     
   const addToList = async () => {
     try {
-      await axios.post("http://localhost:5000/api/user/add", {
+      await axios.post("http://localhost:5002/api/movies/add", {
         email,
         data: movieData,
       });
@@ -71,7 +68,7 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
                 width="100%"
                 height="100%"
                 src={`https://www.youtube.com/embed/${videoKey}`}
-                frameborder="0"
+                frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen
                 onClick={handleVideoClick}
               />

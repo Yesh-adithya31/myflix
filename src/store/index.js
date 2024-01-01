@@ -10,13 +10,43 @@ const initialState = {
   movies: [],
   genresLoaded: false,
   genres: [],
+  user: null,
+  // userEmail: null,
+  error: null,
 };
+
+export const loginUser = createAsyncThunk(
+  "netflix/user",
+  async (userData) => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:5001/api/users/login",
+        userData
+      );
+      return response.data; // Ensure the response structure matches the expected 'user' property
+    } catch (error) {
+      // Handle error or return a default value if necessary
+      throw error;
+    }
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  "netflix/registerUser",
+  async (userData) => {
+    const response = await axios.post(
+      "http://127.0.0.1:5001/api/users/register",
+      userData
+    );
+    return response.data;
+  }
+);
 
 export const getGenres = createAsyncThunk("netflix/genres", async () => {
   const {
     data: { genres },
   } = await axios.get(
-    "https://api.themoviedb.org/3/genre/movie/list?api_key=3d39d6bfe362592e6aa293f01fbcf9b9"
+    "http://localhost:5003/api/discover/movie/genre"
   );
   return genres;
 });
@@ -55,6 +85,8 @@ export const fetchDataByGenre = createAsyncThunk(
     const {
       netflix: { genres },
     } = thunkAPI.getState();
+
+    console.log(genre +" and "+ type);
     return getRawData(
       `${TMDB_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`,
       genres
@@ -77,7 +109,7 @@ export const fetchMovies = createAsyncThunk(
 );
 
 export const fetchVideoKey = createAsyncThunk(
-  'netflix/videoKey',
+  "netflix/videoKey",
   async (movieId) => {
     const response = await axios.get(
       `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`
@@ -87,18 +119,17 @@ export const fetchVideoKey = createAsyncThunk(
     if (results && results.length > 0) {
       return results[0].key; // Return the first video's key
     } else {
-      return ''; // Or handle if there's no video key available
+      return ""; // Or handle if there's no video key available
     }
   }
 );
-
 
 export const getUsersLikedMovies = createAsyncThunk(
   "netflix/getLiked",
   async (email) => {
     const {
       data: { movies },
-    } = await axios.get(`http://localhost:5000/api/user/liked/${email}`);
+    } = await axios.get(`http://localhost:5002/api/movies/liked/${email}`);
     return movies;
   }
 );
@@ -108,7 +139,7 @@ export const removeMovieFromLiked = createAsyncThunk(
   async ({ movieId, email }) => {
     const {
       data: { movies },
-    } = await axios.put("http://localhost:5000/api/user/remove", {
+    } = await axios.put("http://localhost:5002/api/movies/remove", {
       email,
       movieId,
     });
@@ -119,6 +150,11 @@ export const removeMovieFromLiked = createAsyncThunk(
 const NetflixSlice = createSlice({
   name: "Netflix",
   initialState,
+  reducers: {
+    removeuser(state) {
+      state.user = null; // Reset user to null when logging out
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getGenres.fulfilled, (state, action) => {
       state.genres = action.payload;
@@ -139,6 +175,22 @@ const NetflixSlice = createSlice({
     builder.addCase(fetchVideoKey.fulfilled, (state, action) => {
       state.videoKey = action.payload;
     });
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.user = action.payload.user;
+        state.error = null;
+      }
+    });
+    builder.addCase(loginUser.rejected, (state, action) => {
+      state.error = action.error.message;
+    });
+    builder.addCase(registerUser.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.error = null;
+    });
+    builder.addCase(registerUser.rejected, (state, action) => {
+      state.error = action.error.message;
+    });
   },
 });
 
@@ -148,4 +200,4 @@ export const store = configureStore({
   },
 });
 
-export const { setGenres, setMovies } = NetflixSlice.actions;
+export const { removeUser, setMovies } = NetflixSlice.actions;

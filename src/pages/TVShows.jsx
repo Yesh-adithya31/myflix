@@ -18,7 +18,7 @@ function TVShows() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!genres.length) dispatch(getGenres());
+    if (!genres.length) dispatch(getGenres({type: "tv"}));
   }, [dispatch, genres.length]);
 
   useEffect(() => {

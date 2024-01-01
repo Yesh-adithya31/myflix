@@ -42,14 +42,16 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const getGenres = createAsyncThunk("netflix/genres", async () => {
-  const {
-    data: { genres },
-  } = await axios.get(
-    "http://localhost:5003/api/discover/movie/genre"
-  );
-  return genres;
-});
+export const getGenres = createAsyncThunk(
+  'netflix/genres',
+  async (payload, { getState }) => {
+    const type = payload?.type || 'movie'; // Get type from payload or default to 'all'
+    const {
+      data: { genres },
+    } = await axios.get(`http://localhost:5003/api/discover/${type}/genre`);
+    return genres;
+  }
+);
 
 const createArrayFromRawData = (array, moviesArray, genres) => {
   array.forEach((movie) => {
@@ -73,7 +75,7 @@ const getRawData = async (api, genres, paging = false) => {
   for (let i = 1; moviesArray.length < 60 && i < 10; i++) {
     const {
       data: { results },
-    } = await axios.get(`${api}${paging ? `&page=${i}` : ""}`);
+    } = await axios.get(`${api}${paging ? `?page=${i}` : ""}`);
     createArrayFromRawData(results, moviesArray, genres);
   }
   return moviesArray;
@@ -88,7 +90,7 @@ export const fetchDataByGenre = createAsyncThunk(
 
     console.log(genre +" and "+ type);
     return getRawData(
-      `${TMDB_BASE_URL}/discover/${type}?api_key=${API_KEY}&with_genres=${genre}`,
+      `http://127.0.0.1:5003/api/discover/${type}/${genre}`,
       genres
     );
   }
@@ -101,7 +103,7 @@ export const fetchMovies = createAsyncThunk(
       netflix: { genres },
     } = thunkAPI.getState();
     return getRawData(
-      `${TMDB_BASE_URL}/trending/${type}/week?api_key=${API_KEY}`,
+      `http://127.0.0.1:5003/api/discover/${type}`,
       genres,
       true
     );

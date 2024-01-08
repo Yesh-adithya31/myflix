@@ -114,12 +114,12 @@ export const fetchVideoKey = createAsyncThunk(
   "netflix/videoKey",
   async (movieId) => {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`
+      `http://localhost:5003/api/discover/video/${movieId}`
     );
-    const { results } = response.data;
+    const { key } = response.data;
     // Assuming there's at least one video available
-    if (results && results.length > 0) {
-      return results[0].key; // Return the first video's key
+    if (key) {
+      return key; // Return the first video's key
     } else {
       return ""; // Or handle if there's no video key available
     }

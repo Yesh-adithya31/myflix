@@ -20,6 +20,7 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
   const check = async () => {
     setIsHovered(true);
     dispatch(fetchVideoKey(movieData.id)); 
+    console.log(movieData.id)
   }
   // onAuthStateChanged(firebaseAuth, (currentUser) => {
   //   if (currentUser) {
@@ -57,17 +58,17 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
       {isHovered && (
         <div className="hover">
           <div className="image-video-container">
-            {/* <img
+            <img
               src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
               alt="card"
              onClick={handleVideoClick}
-            /> */}
+            />
             {videoKey && (
               <iframe
                 title="YouTube Video Player"
                 width="100%"
                 height="100%"
-                src={`https://www.youtube.com/embed/${videoKey}`}
+                src={`https://drive.google.com/file/d/${videoKey}/preview`}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen
                 onClick={handleVideoClick}

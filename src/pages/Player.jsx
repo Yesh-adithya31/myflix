@@ -18,7 +18,7 @@ export default function Player() {
           title="YouTube Video Player"
           width="100%"
           height="100%"
-          src={`https://www.youtube.com/embed/${videoUrl}`}
+          src={`https://drive.google.com/file/d/${videoUrl}/preview`}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen

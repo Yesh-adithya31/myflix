@@ -48,7 +48,7 @@ _This is the step you have to follow._
 1. Get a free API Key at (https://github.com/Yesh-adithya31/ecommerce.git)
 2. Clone the repo
    ```sh
-   git clone https://github.com/Yesh-adithya31/ecommerce.git
+   git clone https://github.com/Yesh-adithya31/myflix.git
    ```
 3. Install npm packages
    ```sh
